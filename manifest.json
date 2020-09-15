@@ -1,0 +1,38 @@
+{
+
+    "description": "Historedge is a personal Google or a Memex of your browser history.",
+    "manifest_version": 2,
+    "name": "historedge",
+    "version": "0.1.0",
+    "homepage_url": "https://github.com/headsrooms/historedge-webextension",
+    "icons": {
+      "48": "icons/network.svg"
+    },
+    "browser_specific_settings": {
+        "gecko": {
+          "id": "addon@example.com"
+        }
+      },
+  
+    "background": {
+      "scripts": ["historyBackground.js"]
+    },
+  
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["historyContent.js"]
+      }
+    ],
+    
+    "permissions": [
+        "http://127.0.0.1/history/",
+        "tabs",
+        "storage",
+        "webRequest",
+        "activeTab",
+        "notifications",
+        "history"
+    ]
+  
+  }

@@ -1,37 +1,27 @@
 function registerHistory(payload, apiUrl = "http://127.0.0.1/history/") {
-  fetch(apiUrl, {
+  return fetch(apiUrl, {
     method: "POST",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
     },
     redirect: "follow",
-    referrerPolicy: "no-referrer",
     body: JSON.stringify(payload),
   })
-    .then((response) => response.json())
-    .catch((error) => {
-      console.error("Error:", error);
-    });
 }
 
-function setSaved(value) {
-  browser.storage.sync.set(
-    {
-      saved: value,
-    },
-    function () {}
-  );
-}
+let myPort = browser.runtime.connect({name:"port-from-cs"});
+myPort.postMessage({greeting: "hello from content script"});
 
-browser.runtime.onMessage.addListener((history) => {
-  setSaved(true);
+myPort.onMessage.addListener(function(history) {
+  console.log(`History length: ${history.length}`)
   const payload = {
-    user_id: "60971fa3-b750-417d-825b-27354b2fe49c",
+    user_id: "a9558f3d-ec25-42a5-9735-f9c5242860fe",
     items: history,
   };
-  registerHistory(payload);
-  return Promise.resolve();
+  registerHistory(payload).then((response) => {
+    console.log(response);
+    return response;
+  }, function(err) {
+    console.error("Failed!", err);
+  })
 });
